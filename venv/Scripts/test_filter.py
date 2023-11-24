@@ -1,4 +1,4 @@
-#!C:\Users\yanvi\dev\python\bitbucket-api_v4.3\venv\Scripts\python.exe
+#!C:\Users\yanvi\dev\python\XTVT\xtvt\venv\Scripts\python.exe
 import bitbucket
 import EXIF
 import os
