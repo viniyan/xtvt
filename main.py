@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from bitbucket import Bitbucket
 from datetime import datetime
 import pandas as pd
-from flask_cors import CORS
+from flask_cors import cross_origin
 from db_utils import (
     connect_db,
     append_commits,
@@ -19,13 +19,14 @@ from db_utils import (
 )
 
 app = Flask(__name__)
-CORS(app)
+
 
 # Load the app configuration
 app.config.from_pyfile("settings.py")
 
 
 @app.route("/authors", methods=["GET"])
+@cross_origin()
 def get_authors():
     # Connect to database
     engine = init_db_engine()
