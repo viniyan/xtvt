@@ -74,7 +74,7 @@ def query_author_repos(engine, author_id):
     sql = """
         SELECT repo, count(*) as commits
         FROM bb_commits
-        WHERE author_id = :author_id
+        WHERE author_id = :author_id OR author= :author_id
         GROUP BY repo;
     """
 
@@ -91,6 +91,24 @@ def query_author_repos(engine, author_id):
 
     return df
 
+def query_repos(engine):
+    sql = """
+        SELECT repo, count(*) as commits
+        FROM bb_commits
+        GROUP BY repo;
+    """
+
+    stmt = text(sql)
+    with engine.begin() as conn:
+        result = conn.execute(stmt)
+
+    records = []
+    for record in result:
+        records.append(record)
+
+    df = pd.DataFrame(records)
+
+    return df
 
 def query_author_commits(engine, author_id):
     sql = """
@@ -251,6 +269,79 @@ def query_sync_history(engine, table_name, repo):
     records = []
     for record in result:
         records.append(record)
+
+    df = pd.DataFrame(records)
+
+    return df
+
+
+def query_diffs_by_author(engine, author):
+    # Get commit details for a specific author
+    sql = """
+        SELECT
+            diff
+        FROM
+            bb_commits
+        WHERE
+            author = :author;
+    """
+
+    stmt = text(sql)
+    stmt = stmt.bindparams(author=author)
+    with engine.begin() as conn:
+        result = conn.execute(stmt)
+
+    records = []
+    for record in result:
+        records.append(record)
+
+    df = pd.DataFrame(records)
+
+    return df
+
+
+def query_all_commits(engine):
+    # Get all commit details
+    sql = """
+        SELECT
+            id,
+            created_at
+        FROM
+            bb_commits;
+    """
+
+    stmt = text(sql)
+    with engine.begin() as conn:
+        result = conn.execute(stmt)
+
+    records = []
+    for record in result:
+        records.append(record)
+
+    df = pd.DataFrame(records)
+
+    return df
+
+
+def query_all_repo_commits(engine, repo_name):
+    sql = """
+        SELECT
+            id,
+            created_at
+        FROM
+            bb_commits
+        WHERE
+            repo = :repo_name;
+    """
+
+    stmt = text(sql)
+    stmt = stmt.bindparams(repo_name=repo_name)
+    with engine.begin() as conn:
+        result = conn.execute(stmt)
+
+    records = []
+    for record in result:
+        records.append({"commit_id": record.id, "diff": record.diff})
 
     df = pd.DataFrame(records)
 
