@@ -430,6 +430,7 @@ def get_repo_commits(repo_name):
 
 
 @app.route("/authors/<author_id>/<date>/commits", methods=["GET"])
+@cross_origin()
 def get_author_commits_by_date(author_id, date):
     # Connect to database
     engine = init_db_engine()
