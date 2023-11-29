@@ -74,7 +74,7 @@ def query_author_repos(engine, author_id):
     sql = """
         SELECT repo, count(*) as commits
         FROM bb_commits
-        WHERE author_id = :author_id OR author= :author_id
+        WHERE author_id = :author_id 
         GROUP BY repo;
     """
 
