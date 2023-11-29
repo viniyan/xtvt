@@ -74,7 +74,7 @@ def query_author_repos(engine, author_id):
     sql = """
         SELECT repo, count(*) as commits
         FROM bb_commits
-        WHERE author_id = :author_id 
+        WHERE author_id = :author_id OR author= :author_id
         GROUP BY repo;
     """
 
@@ -120,7 +120,7 @@ def query_author_commits(engine, author_id):
             id,
             repo 
         FROM bb_commits
-        WHERE author_id = :author_id;
+        WHERE author_id = :author_id OR author= :author_id;
     """
 
     stmt = text(sql)
