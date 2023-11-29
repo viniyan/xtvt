@@ -346,3 +346,32 @@ def query_all_repo_commits(engine, repo_name):
     df = pd.DataFrame(records)
 
     return df
+
+def query_commits_by_day_and_author(engine, author_id, date):
+    # Obtém os commits do banco de dados
+    sql = """
+        SELECT 
+            author,
+            author_id,
+            branch,
+            created_at,
+            id,
+            repo 
+        FROM bb_commits
+        WHERE (author_id = :author_id OR author = :author_id)
+            AND DATE(created_at) = :date;
+    """
+
+    stmt = text(sql)
+    stmt = stmt.bindparams(author_id=author_id, date=date)
+
+    with engine.begin() as conn:
+        result = conn.execute(stmt)
+
+    records = []
+    for record in result:
+        records.append(record)
+
+    df = pd.DataFrame(records)
+
+    return df

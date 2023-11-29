@@ -20,6 +20,8 @@ from db_utils import (
     query_diffs_by_author,
     query_all_commits,
     query_all_repo_commits,
+    query_commits_by_day_and_author,
+    
 )
 import requests
 import concurrent.futures
@@ -104,6 +106,8 @@ def get_author_commits(author_id):
 
     # Return a list of commits
     df = query_author_commits(engine, author_id)
+
+    df['created_at'] = pd.to_datetime(df['created_at'])
 
     result = {
         "statusCode": 200,
@@ -398,6 +402,9 @@ def get_all_commits():
     # Return a list of all commits
     df = query_all_commits(engine)
 
+    df['created_at'] = pd.to_datetime(df['created_at'])
+
+
     result = {
         "statusCode": 200,
         "data": df.to_dict(orient="records"),
@@ -420,6 +427,31 @@ def get_repo_commits(repo_name):
     }
 
     return jsonify(result)    
+
+
+@app.route("/authors/<author_id>/<date>/commits", methods=["GET"])
+def get_author_commits_by_date(author_id, date):
+    # Connect to database
+    engine = init_db_engine()
+
+    # Retorna um DataFrame com os commits do autor
+    df = query_commits_by_day_and_author(engine, author_id, date)
+
+    # Converta a coluna 'created_at' para datetime, se ainda não for
+    df['created_at'] = pd.to_datetime(df['created_at'])
+
+    # Filtre os dados com base na data
+    df_filtered = df[df['created_at'].dt.strftime('%Y-%m-%d') == pd.to_datetime(date).strftime('%Y-%m-%d')]
+
+    result = {
+        "statusCode": 200,
+        "data": {
+            "commits": df_filtered.to_dict(orient="records"),
+            "commit_count": len(df_filtered)
+        },
+    }
+
+    return jsonify(result)
 
 if __name__ == "__main__":
     app.run(port=8081)
