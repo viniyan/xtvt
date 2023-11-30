@@ -375,3 +375,30 @@ def query_commits_by_day_and_author(engine, author_id, date):
     df = pd.DataFrame(records)
 
     return df
+
+
+
+def query_all_commit_count_by_day_and_author(engine, author_id):
+    # Obtém os commits do banco de dados
+    sql = """
+        SELECT 
+            DATE(created_at) as date,
+            COUNT(*) as commit_count
+        FROM bb_commits
+        WHERE (author_id = :author_id OR author = :author_id)
+        GROUP BY date;
+    """
+
+    stmt = text(sql)
+    stmt = stmt.bindparams(author_id=author_id)
+
+    with engine.begin() as conn:
+        result = conn.execute(stmt)
+
+    records = []
+    for record in result:
+        records.append(record)
+
+    df = pd.DataFrame(records)
+
+    return df

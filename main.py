@@ -21,7 +21,7 @@ from db_utils import (
     query_all_commits,
     query_all_repo_commits,
     query_commits_by_day_and_author,
-    
+    query_all_commit_count_by_day_and_author,
 )
 import requests
 import concurrent.futures
@@ -77,6 +77,7 @@ def get_repos():
     return jsonify(result)
 
 @app.route("/authors/<path:author_id>/repos", methods=["GET"])
+@cross_origin()
 def get_author_repos(author_id):
     # Connect to database
     engine = init_db_engine()
@@ -100,6 +101,7 @@ def get_author_repos(author_id):
 
 
 @app.route("/authors/<author_id>/commits", methods=["GET"])
+@cross_origin()
 def get_author_commits(author_id):
     # Connect to database
     engine = init_db_engine()
@@ -118,6 +120,7 @@ def get_author_commits(author_id):
 
 
 @app.route("/authors/<author_id>/pullrequests", methods=["GET"])
+@cross_origin()
 def get_author_pullrequests(author_id):
     # Connect to database
     engine = init_db_engine()
@@ -134,6 +137,7 @@ def get_author_pullrequests(author_id):
 
 
 @app.route("/commits/<commit_id>/diff", methods=["GET"])
+@cross_origin()
 def get_commit_diff(commit_id):
     # Connect to database
     engine = init_db_engine()
@@ -150,6 +154,7 @@ def get_commit_diff(commit_id):
 
 
 @app.route("/sync/commits", methods=["POST"])
+@cross_origin()
 def sync_commits():
     # Retrieve query parameters
     page_size = request.args.get("page_size", default=20, type=int)
@@ -225,6 +230,7 @@ def sync_commits():
 
 
 @app.route("/sync/pullrequests", methods=["POST"])
+@cross_origin()
 def sync_pullrequests():
     # Retrieve query parameters
     page_size = request.args.get("page_size", default=10, type=int)
@@ -275,6 +281,7 @@ def sync_pullrequests():
 
 
 @app.route("/sync/diffs", methods=["POST"])
+@cross_origin()
 def sync_diffs():
     # Connect to database
     engine = init_db_engine()
@@ -330,6 +337,7 @@ def init_db_engine():
 
 
 @app.route("/<author>/diff", methods=["GET"])
+@cross_origin()
 def get_author_diff(author):
     # Connect to database
     engine = init_db_engine()
@@ -395,6 +403,7 @@ def parse_git_diff(diff_content):
 
 
 @app.route("/all_commits", methods=["GET"])
+@cross_origin()
 def get_all_commits():
     # Connect to database
     engine = init_db_engine()
@@ -414,6 +423,7 @@ def get_all_commits():
 
 
 @app.route("/<repo_name>/all_commits", methods=["GET"])
+@cross_origin()
 def get_repo_commits(repo_name):
     # Connect to database
     engine = init_db_engine()
@@ -453,6 +463,27 @@ def get_author_commits_by_date(author_id, date):
     }
 
     return jsonify(result)
+
+
+@app.route("/authors/<author_id>/commit_count", methods=["GET"])
+@cross_origin()
+def get_author_all_commit_count_by_date(author_id):
+    # Connect to database
+    engine = init_db_engine()
+
+    # Retorna um DataFrame com os commits do autor, agrupados por dia
+    df = query_all_commit_count_by_day_and_author(engine, author_id)
+
+    result = {
+        "statusCode": 200,
+        "data": {
+            "commit_count": df.to_dict(orient="records"),
+        },
+    }
+
+    return jsonify(result)
+
+
 
 if __name__ == "__main__":
     app.run(port=8081)
