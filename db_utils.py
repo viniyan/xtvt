@@ -402,3 +402,71 @@ def query_all_commit_count_by_day_and_author(engine, author_id):
     df = pd.DataFrame(records)
 
     return df
+
+def query_all_pullrequests(engine):
+    sql = """
+        SELECT * 
+        FROM bb_pullrequests;
+    """
+
+    stmt = text(sql)
+    #stmt = stmt.bindparams(author_id=author_id)
+    with engine.begin() as conn:
+        result = conn.execute(stmt)
+
+    records = []
+    for record in result:
+        records.append(record)
+
+    df = pd.DataFrame(records)
+
+    return df
+
+
+def query_last_author_pullrequest(engine, author_id):
+    sql = """
+        SELECT * 
+        FROM bb_pullrequests
+        WHERE (author_id = :author_id OR author = :author_id);
+    """
+
+    stmt = text(sql)
+    stmt = stmt.bindparams(author_id=author_id)
+    with engine.begin() as conn:
+        result = conn.execute(stmt)
+
+    records = []
+    for record in result:
+        records.append(record)
+
+    df = pd.DataFrame(records)
+
+    return df
+
+def query_last_pullrequest(engine):
+    sql = """
+        SELECT * 
+        FROM bb_pullrequests;
+    """
+
+    stmt = text(sql)
+    stmt = stmt.bindparams()
+    with engine.begin() as conn:
+        result = conn.execute(stmt)
+
+    records = []
+    for record in result:
+        records.append(record)
+
+    df = pd.DataFrame(records)
+
+    return df
+
+
+def append_branches_bb_commits_table(engine, df, chunk_size):
+    table_name = "bb_commits"
+    append_records(engine, df, chunk_size, table_name)
+
+def append_branches_bb_pullrequests_table(engine, df, chunk_size):
+    table_name = "bb_pullrequests"
+    append_records(engine, df, chunk_size, table_name)

@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS bb_commits (
     msg TEXT,
     created_at VARCHAR(255),
     repo VARCHAR(255),
-    diff TEXT
+    diff TEXT, 
+    branch TEXT
 );
 
 CREATE TABLE IF NOT EXISTS bb_pullrequests (
@@ -17,7 +18,8 @@ CREATE TABLE IF NOT EXISTS bb_pullrequests (
     author_id VARCHAR(50),
     repo VARCHAR(255),
     created_at VARCHAR(50),
-    updated_at VARCHAR(50)
+    updated_at VARCHAR(50), 
+    branch TEXT
 );
 
 CREATE TABLE IF NOT EXISTS bb_sync_history (

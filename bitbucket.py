@@ -131,3 +131,27 @@ class Bitbucket:
             email_address = matches[0].strip()
 
         return email_address
+
+    def list_branches(self, page=1, page_size=10):
+        """List pull requests for a given repository."""
+        print(
+            f"Fetching, repo: {self.workspace}/{self.repo}, page: {page}, size: {page_size}..."
+        )
+
+        # Construct the API url
+        url = f"{self.api_base_url}/{self.workspace}/{self.repo}/refs/branches"
+        auth = (
+            self.username,
+            self.app_password,
+        )
+        response = requests.get(url, auth=auth)
+
+        if response.status_code != 200:
+            return None
+
+        response = response.json()
+        records = response["values"]
+
+        #print(f"Records: {response}")
+        return records
+    

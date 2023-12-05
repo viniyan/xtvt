@@ -1,6 +1,8 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
+from collections import Counter
 from bitbucket import Bitbucket
 from datetime import datetime
+import logging
 import pandas as pd
 from flask_cors import cross_origin
 from db_utils import (
@@ -22,10 +24,16 @@ from db_utils import (
     query_all_repo_commits,
     query_commits_by_day_and_author,
     query_all_commit_count_by_day_and_author,
+    query_all_pullrequests,
+    query_last_author_pullrequest,
+    query_last_pullrequest,
+    append_branches_bb_commits_table,
+    append_branches_bb_pullrequests_table,
 )
 import requests
 import concurrent.futures
 import difflib
+import json
 
 app = Flask(__name__)
 
@@ -483,7 +491,174 @@ def get_author_all_commit_count_by_date(author_id):
 
     return jsonify(result)
 
+@app.route("/pullrequests", methods=["GET"])
+@cross_origin()
+def get_all_pullrequests():
+    # Connect to database
+    engine = init_db_engine()
 
+    # Return a list of commits
+    df = query_all_pullrequests(engine)
+
+    result = {
+        "statusCode": 200,
+        "data": df.to_dict(orient="records"),
+    }
+
+    data = result["data"]
+
+    return jsonify(result)
+    #return data
+
+@app.route("/count_pullrequests", methods=["GET"])
+@cross_origin()
+def count_pullrequests():
+    # Connect to database
+    engine = init_db_engine()
+
+    # Return a list of commits
+    df = query_all_pullrequests(engine)
+
+    result = {
+        "statusCode": 200,
+        "data": df.to_dict(orient="records"),
+    }
+
+
+    pullrequests_data = result
+    
+    authors_all = [item["author"] for item in pullrequests_data.get("data", [])]
+    name_counts = Counter(authors_all)
+    return dict(name_counts)
+   
+    
+
+@app.route("/<author_id>/last_pullrequest", methods=["GET"])
+@cross_origin()
+def get_author_last_pullrequests(author_id):
+    # Connect to database
+    engine = init_db_engine()
+
+    # Return a list of commits
+    df = query_last_author_pullrequest(engine, author_id)
+
+    result = {
+        "statusCode": 200,
+        "data": df.to_dict(orient="records"),
+    }
+
+    all_dates = [item["created_at"] for item in result.get("data", [])]
+
+    formatted_dates = [datetime.fromisoformat(date.replace('T', ' ').replace('Z', '')) for date in all_dates]
+
+    # Ordenar em ordem decrescente
+    ordered_dates = sorted(formatted_dates, reverse=True)
+
+    return ordered_dates
+
+@app.route("/last_pullrequest", methods=["GET"])
+@cross_origin()
+def get_last_pullrequest():
+    # Connect to database
+    engine = init_db_engine()
+
+    # Return a list of commits
+    df = query_last_pullrequest(engine)
+
+    result1 = {
+        "statusCode": 200,
+        "data": df.to_dict(orient="records"),
+    }
+
+    all_dates = [item["created_at"] for item in result1.get("data", [])]
+
+    all_authors = [item["author"] for item in result1.get("data", [])]
+
+    formatted_dates = [datetime.fromisoformat(date.replace('T', ' ').replace('Z', '')) for date in all_dates]
+
+    # # Ordenar em ordem decrescente
+    #ordered_dates = sorted(formatted_dates, reverse=True)
+
+    # result = {
+    #     "statusCode": 200,
+    #     "data": {
+    #         "author" : author,
+    #         "last_pr" : ordered_dates[0],
+    #     },
+    # }
+
+    dates_by_author = {}
+
+    for author in set(all_authors):
+        author_dates = [datetime.fromisoformat(date.replace('T', ' ').replace('Z', '')) for date, a in zip(all_dates, all_authors) if a == author]
+        ordered_dates = sorted(author_dates, reverse=True)
+        dates_by_author[author] = ordered_dates[0] if ordered_dates else None
+
+    result = {
+        "statusCode": 200,
+        "data": {
+            "dates_by_author": dates_by_author,
+        },
+    }
+
+    return result
+    # return ordered_dates
+
+
+@app.route("/sync_branches", methods=["POST"])
+@cross_origin()
+def list_branches():
+    # Retrieve query parameters
+    page_size = request.args.get("page_size", default=10, type=int)
+
+    # Retrieve repositories
+    repos = app.config["BITBUCKET_REPOS"]
+
+    # Connect to database
+    engine = init_db_engine()
+
+    total_count = 0
+
+    for repo in repos:
+        workspace, repo_slug = repo.split("/")
+
+        # Initialize Bitbucket client
+        bitbucket = Bitbucket(
+            app.config["BITBUCKET_USERNAME"],
+            app.config["BITBUCKET_APP_PASSWORD"],
+            workspace,
+            repo_slug,
+        )
+
+        records = bitbucket.list_branches()
+
+        count = 0
+        
+        # Carregar o JSON
+        data = json.dumps(records)
+
+        data2 = json.loads(data)
+
+        data_for_table = [{"branch": item["name"], "author": item["target"]["author"]["user"]["display_name"]} for item in data2]
+
+        
+        df = pd.DataFrame(data_for_table)
+
+        #print(df)
+
+        append_branches_bb_pullrequests_table(engine, df, app.config["DB_CHUNK_SIZE"])
+
+        count += len(data_for_table)
+    
+    total_count += count
+
+    result = {
+        "statusCode": 200,
+        "count": total_count,
+    }
+    return jsonify(result)
+
+           
 
 if __name__ == "__main__":
     app.run(port=8081)
