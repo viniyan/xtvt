@@ -29,6 +29,7 @@ from db_utils import (
     query_last_pullrequest,
     append_branches_bb_commits_table,
     append_branches_bb_pullrequests_table,
+    append_branches_bb_branches_table,
 )
 import requests
 import concurrent.futures
@@ -639,14 +640,14 @@ def list_branches():
 
         data2 = json.loads(data)
 
-        data_for_table = [{"branch": item["name"], "author": item["target"]["author"]["user"]["display_name"]} for item in data2]
+        data_for_table = [{"branch": item["name"], "author": item["target"]["author"]["user"]["display_name"], "created_at": item["target"]["date"], "repository": item["target"]["repository"]["full_name"]} for item in data2]
 
         
         df = pd.DataFrame(data_for_table)
 
         #print(df)
 
-        append_branches_bb_pullrequests_table(engine, df, app.config["DB_CHUNK_SIZE"])
+        #append_branches_bb_branches_table(engine, df, app.config["DB_CHUNK_SIZE"])
 
         count += len(data_for_table)
     
@@ -656,9 +657,95 @@ def list_branches():
         "statusCode": 200,
         "count": total_count,
     }
-    return jsonify(result)
+    #return jsonify(result)
+    return data2
+    #return data_for_table       
 
-           
+@app.route("/sync_branches2", methods=["POST"])
+@cross_origin()
+def sync_branches_commits(page=1, page_size=100):
+
+    repos = app.config["BITBUCKET_REPOS"]
+
+    engine = init_db_engine()
+
+    total_count = 0
+
+    for repo in repos:
+        workspace, repo_slug = repo.split("/")
+
+        # Get the sync history for the repo
+        table_name = "bb_branches"
+        df_s = query_sync_history(engine, table_name, repo)
+        last_synced_at = None
+        if len(df_s) > 0:
+            updated_at = df_s.iloc[0]["updated_at"]
+            last_synced_at = datetime.fromisoformat(updated_at)
+            print(f"Last synced at: {last_synced_at}")
+
+        # Initialize Bitbucket client
+        bitbucket = Bitbucket(
+            app.config["BITBUCKET_USERNAME"],
+            app.config["BITBUCKET_APP_PASSWORD"],
+            workspace,
+            repo_slug,
+        )
+
+        page = 1
+        count = 0
+
+        result = bitbucket.list_branches_commits(page=page, page_size=page_size)
+        return result
+
+
+    # while True:
+    #     # Return a list of branches
+        
+    #     records1 = bitbucket.list_branches_commits(page=page, page_size=page_size)
+
+    #     if len(records1) == 0:
+    #         break
+
+    #     df = pd.DataFrame(records1)
+
+    #     append_branches_bb_branches_table(engine, df, app.config["DB_CHUNK_SIZE"])
+
+    #     page += 1
+    #     count += len(records1)
+
+    #     look_more = True
+    #     for index, row in df.iterrows():
+    #         created_at = datetime.fromisoformat(row["created_at"])
+    #         if last_synced_at is not None and created_at < last_synced_at:
+    #             print(
+    #                 f"Reached last synced record: {created_at} | {last_synced_at}"
+    #             )
+    #             look_more = False
+    #             break
+
+    #         if not look_more:
+    #             break
+
+    #     # Update the sync history for the repo
+    #     insert_sync_history(engine, table_name, repo)
+
+    #     total_count += count
+
+    # result = {
+    #     "statusCode": 200,
+    #     "count": total_count,
+    # }
+    # #return jsonify(result)
+        
+    # return records1
+
+        
+    # return data2
+
+
+
+
+
 
 if __name__ == "__main__":
     app.run(port=8081)

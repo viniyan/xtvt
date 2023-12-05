@@ -1,0 +1,343 @@
+{
+    "page":1,
+    "pagelen":10,
+    "size":3,
+    "values":[
+       {
+          "default_merge_strategy":"merge_commit",
+          "links":{
+             "commits":{
+                "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commits/feature/teste2"
+             },
+             "html":{
+                "href":"https://bitbucket.org/backend-test1/xtvt-teste/branch/feature/teste2"
+             },
+             "self":{
+                "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/refs/branches/feature/teste2"
+             }
+          },
+          "merge_strategies":[
+             "merge_commit",
+             "squash",
+             "fast_forward"
+          ],
+          "name":"feature/teste2",
+          "target":{
+             "author":{
+                "raw":"vinicius <viniciusy@xgrow.com>",
+                "type":"author",
+                "user":{
+                   "account_id":"630f73ccd8850343ef58659e",
+                   "display_name":"VINICIUS YAN GOIS",
+                   "links":{
+                      "avatar":{
+                         "href":"https://secure.gravatar.com/avatar/af0f01d21660b2e0bdfd6527b7ed493f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FVG-6.png"
+                      },
+                      "html":{
+                         "href":"https://bitbucket.org/%7B426de9bc-0301-4562-9b8f-d9bd0610ace3%7D/"
+                      },
+                      "self":{
+                         "href":"https://api.bitbucket.org/2.0/users/%7B426de9bc-0301-4562-9b8f-d9bd0610ace3%7D"
+                      }
+                   },
+                   "nickname":"VINICIUS YAN GOIS",
+                   "type":"user",
+                   "uuid":"{426de9bc-0301-4562-9b8f-d9bd0610ace3}"
+                }
+             },
+             "date":"2023-10-24T23:30:47+00:00",
+             "hash":"2bf04ca493f886845ca97d5778d03fa41b13b816",
+             "links":{
+                "approve":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/2bf04ca493f886845ca97d5778d03fa41b13b816/approve"
+                },
+                "comments":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/2bf04ca493f886845ca97d5778d03fa41b13b816/comments"
+                },
+                "diff":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/diff/2bf04ca493f886845ca97d5778d03fa41b13b816"
+                },
+                "html":{
+                   "href":"https://bitbucket.org/backend-test1/xtvt-teste/commits/2bf04ca493f886845ca97d5778d03fa41b13b816"
+                },
+                "patch":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/patch/2bf04ca493f886845ca97d5778d03fa41b13b816"
+                },
+                "self":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/2bf04ca493f886845ca97d5778d03fa41b13b816"
+                },
+                "statuses":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/2bf04ca493f886845ca97d5778d03fa41b13b816/statuses"
+                }
+             },
+             "message":"FEATURE/TESTE2\n",
+             "parents":[
+                {
+                   "hash":"4fe534133787e77295365ab78e44e9cc58e61eaf",
+                   "links":{
+                      "html":{
+                         "href":"https://bitbucket.org/backend-test1/xtvt-teste/commits/4fe534133787e77295365ab78e44e9cc58e61eaf"
+                      },
+                      "self":{
+                         "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/4fe534133787e77295365ab78e44e9cc58e61eaf"
+                      }
+                   },
+                   "type":"commit"
+                }
+             ],
+             "repository":{
+                "full_name":"backend-test1/xtvt-teste",
+                "links":{
+                   "avatar":{
+                      "href":"https://bytebucket.org/ravatar/%7Babefff62-7c7a-421a-9f8d-83399b4ac991%7D?ts=default"
+                   },
+                   "html":{
+                      "href":"https://bitbucket.org/backend-test1/xtvt-teste"
+                   },
+                   "self":{
+                      "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste"
+                   }
+                },
+                "name":"xtvt-teste",
+                "type":"repository",
+                "uuid":"{abefff62-7c7a-421a-9f8d-83399b4ac991}"
+             },
+             "type":"commit"
+          },
+          "type":"branch"
+       },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       {
+          "default_merge_strategy":"merge_commit",
+          "links":{
+             "commits":{
+                "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commits/feature/teste"
+             },
+             "html":{
+                "href":"https://bitbucket.org/backend-test1/xtvt-teste/branch/feature/teste"
+             },
+             "self":{
+                "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/refs/branches/feature/teste"
+             }
+          },
+          "merge_strategies":[
+             "merge_commit",
+             "squash",
+             "fast_forward"
+          ],
+          "name":"feature/teste",
+          "target":{
+             "author":{
+                "raw":"vinicius <viniciusy@xgrow.com>",
+                "type":"author",
+                "user":{
+                   "account_id":"630f73ccd8850343ef58659e",
+                   "display_name":"VINICIUS YAN GOIS",
+                   "links":{
+                      "avatar":{
+                         "href":"https://secure.gravatar.com/avatar/af0f01d21660b2e0bdfd6527b7ed493f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FVG-6.png"
+                      },
+                      "html":{
+                         "href":"https://bitbucket.org/%7B426de9bc-0301-4562-9b8f-d9bd0610ace3%7D/"
+                      },
+                      "self":{
+                         "href":"https://api.bitbucket.org/2.0/users/%7B426de9bc-0301-4562-9b8f-d9bd0610ace3%7D"
+                      }
+                   },
+                   "nickname":"VINICIUS YAN GOIS",
+                   "type":"user",
+                   "uuid":"{426de9bc-0301-4562-9b8f-d9bd0610ace3}"
+                }
+             },
+             "date":"2023-10-24T23:27:41+00:00",
+             "hash":"4fe534133787e77295365ab78e44e9cc58e61eaf",
+             "links":{
+                "approve":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/4fe534133787e77295365ab78e44e9cc58e61eaf/approve"
+                },
+                "comments":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/4fe534133787e77295365ab78e44e9cc58e61eaf/comments"
+                },
+                "diff":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/diff/4fe534133787e77295365ab78e44e9cc58e61eaf"
+                },
+                "html":{
+                   "href":"https://bitbucket.org/backend-test1/xtvt-teste/commits/4fe534133787e77295365ab78e44e9cc58e61eaf"
+                },
+                "patch":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/patch/4fe534133787e77295365ab78e44e9cc58e61eaf"
+                },
+                "self":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/4fe534133787e77295365ab78e44e9cc58e61eaf"
+                },
+                "statuses":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/4fe534133787e77295365ab78e44e9cc58e61eaf/statuses"
+                }
+             },
+             "message":"FEATURE/TESTE\n",
+             "parents":[
+                {
+                   "hash":"bd27af6c5c08d811680f2a422c33b75c1de3d72e",
+                   "links":{
+                      "html":{
+                         "href":"https://bitbucket.org/backend-test1/xtvt-teste/commits/bd27af6c5c08d811680f2a422c33b75c1de3d72e"
+                      },
+                      "self":{
+                         "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/bd27af6c5c08d811680f2a422c33b75c1de3d72e"
+                      }
+                   },
+                   "type":"commit"
+                }
+             ],
+             "repository":{
+                "full_name":"backend-test1/xtvt-teste",
+                "links":{
+                   "avatar":{
+                      "href":"https://bytebucket.org/ravatar/%7Babefff62-7c7a-421a-9f8d-83399b4ac991%7D?ts=default"
+                   },
+                   "html":{
+                      "href":"https://bitbucket.org/backend-test1/xtvt-teste"
+                   },
+                   "self":{
+                      "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste"
+                   }
+                },
+                "name":"xtvt-teste",
+                "type":"repository",
+                "uuid":"{abefff62-7c7a-421a-9f8d-83399b4ac991}"
+             },
+             "type":"commit"
+          },
+          "type":"branch"
+       },
+       {
+          "default_merge_strategy":"merge_commit",
+          "links":{
+             "commits":{
+                "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commits/master"
+             },
+             "html":{
+                "href":"https://bitbucket.org/backend-test1/xtvt-teste/branch/master"
+             },
+             "self":{
+                "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/refs/branches/master"
+             }
+          },
+          "merge_strategies":[
+             "merge_commit",
+             "squash",
+             "fast_forward"
+          ],
+          "name":"master",
+          "target":{
+             "author":{
+                "raw":"vinicius <viniciusy@xgrow.com>",
+                "type":"author",
+                "user":{
+                   "account_id":"630f73ccd8850343ef58659e",
+                   "display_name":"VINICIUS YAN GOIS",
+                   "links":{
+                      "avatar":{
+                         "href":"https://secure.gravatar.com/avatar/af0f01d21660b2e0bdfd6527b7ed493f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FVG-6.png"
+                      },
+                      "html":{
+                         "href":"https://bitbucket.org/%7B426de9bc-0301-4562-9b8f-d9bd0610ace3%7D/"
+                      },
+                      "self":{
+                         "href":"https://api.bitbucket.org/2.0/users/%7B426de9bc-0301-4562-9b8f-d9bd0610ace3%7D"
+                      }
+                   },
+                   "nickname":"VINICIUS YAN GOIS",
+                   "type":"user",
+                   "uuid":"{426de9bc-0301-4562-9b8f-d9bd0610ace3}"
+                }
+             },
+             "date":"2023-10-24T21:09:57+00:00",
+             "hash":"bd27af6c5c08d811680f2a422c33b75c1de3d72e",
+             "links":{
+                "approve":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/bd27af6c5c08d811680f2a422c33b75c1de3d72e/approve"
+                },
+                "comments":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/bd27af6c5c08d811680f2a422c33b75c1de3d72e/comments"
+                },
+                "diff":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/diff/bd27af6c5c08d811680f2a422c33b75c1de3d72e"
+                },
+                "html":{
+                   "href":"https://bitbucket.org/backend-test1/xtvt-teste/commits/bd27af6c5c08d811680f2a422c33b75c1de3d72e"
+                },
+                "patch":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/patch/bd27af6c5c08d811680f2a422c33b75c1de3d72e"
+                },
+                "self":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/bd27af6c5c08d811680f2a422c33b75c1de3d72e"
+                },
+                "statuses":{
+                   "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/bd27af6c5c08d811680f2a422c33b75c1de3d72e/statuses"
+                }
+             },
+             "message":"teste\n",
+             "parents":[
+                {
+                   "hash":"8fce537e8e4a078d15c712c876f809b1d34cf0ff",
+                   "links":{
+                      "html":{
+                         "href":"https://bitbucket.org/backend-test1/xtvt-teste/commits/8fce537e8e4a078d15c712c876f809b1d34cf0ff"
+                      },
+                      "self":{
+                         "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/8fce537e8e4a078d15c712c876f809b1d34cf0ff"
+                      }
+                   },
+                   "type":"commit"
+                }
+             ],
+             "repository":{
+                "full_name":"backend-test1/xtvt-teste",
+                "links":{
+                   "avatar":{
+                      "href":"https://bytebucket.org/ravatar/%7Babefff62-7c7a-421a-9f8d-83399b4ac991%7D?ts=default"
+                   },
+                   "html":{
+                      "href":"https://bitbucket.org/backend-test1/xtvt-teste"
+                   },
+                   "self":{
+                      "href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste"
+                   }
+                },
+                "name":"xtvt-teste",
+                "type":"repository",
+                "uuid":"{abefff62-7c7a-421a-9f8d-83399b4ac991}"
+             },
+             "type":"commit"
+          },
+          "type":"branch"
+       }
+    ]
+ }
+ 
+
+
+ [{"default_merge_strategy":"merge_commit","links":{"commits":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commits/feature/teste2"},"html":{"href":"https://bitbucket.org/backend-test1/xtvt-teste/branch/feature/teste2"},"self":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/refs/branches/feature/teste2"}},"merge_strategies":["merge_commit","squash","fast_forward"],"name":"feature/teste2","target":{"author":{"raw":"vinicius <viniciusy@xgrow.com>","type":"author","user":{"account_id":"630f73ccd8850343ef58659e","display_name":"VINICIUS YAN GOIS","links":{"avatar":{"href":"https://secure.gravatar.com/avatar/af0f01d21660b2e0bdfd6527b7ed493f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FVG-6.png"},"html":{"href":"https://bitbucket.org/%7B426de9bc-0301-4562-9b8f-d9bd0610ace3%7D/"},"self":{"href":"https://api.bitbucket.org/2.0/users/%7B426de9bc-0301-4562-9b8f-d9bd0610ace3%7D"}},"nickname":"VINICIUS YAN GOIS","type":"user","uuid":"{426de9bc-0301-4562-9b8f-d9bd0610ace3}"}},"date":"2023-10-24T23:30:47+00:00","hash":"2bf04ca493f886845ca97d5778d03fa41b13b816","links":{"approve":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/2bf04ca493f886845ca97d5778d03fa41b13b816/approve"},"comments":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/2bf04ca493f886845ca97d5778d03fa41b13b816/comments"},"diff":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/diff/2bf04ca493f886845ca97d5778d03fa41b13b816"},"html":{"href":"https://bitbucket.org/backend-test1/xtvt-teste/commits/2bf04ca493f886845ca97d5778d03fa41b13b816"},"patch":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/patch/2bf04ca493f886845ca97d5778d03fa41b13b816"},"self":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/2bf04ca493f886845ca97d5778d03fa41b13b816"},"statuses":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/2bf04ca493f886845ca97d5778d03fa41b13b816/statuses"}},"message":"FEATURE/TESTE2\n","parents":[{"hash":"4fe534133787e77295365ab78e44e9cc58e61eaf","links":{"html":{"href":"https://bitbucket.org/backend-test1/xtvt-teste/commits/4fe534133787e77295365ab78e44e9cc58e61eaf"},"self":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/4fe534133787e77295365ab78e44e9cc58e61eaf"}},"type":"commit"}],"repository":{"full_name":"backend-test1/xtvt-teste","links":{"avatar":{"href":"https://bytebucket.org/ravatar/%7Babefff62-7c7a-421a-9f8d-83399b4ac991%7D?ts=default"},"html":{"href":"https://bitbucket.org/backend-test1/xtvt-teste"},"self":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste"}},"name":"xtvt-teste","type":"repository","uuid":"{abefff62-7c7a-421a-9f8d-83399b4ac991}"},"type":"commit"},"type":"branch"},{"default_merge_strategy":"merge_commit","links":{"commits":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commits/feature/teste"},"html":{"href":"https://bitbucket.org/backend-test1/xtvt-teste/branch/feature/teste"},"self":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/refs/branches/feature/teste"}},"merge_strategies":["merge_commit","squash","fast_forward"],"name":"feature/teste","target":{"author":{"raw":"vinicius <viniciusy@xgrow.com>","type":"author","user":{"account_id":"630f73ccd8850343ef58659e","display_name":"VINICIUS YAN GOIS","links":{"avatar":{"href":"https://secure.gravatar.com/avatar/af0f01d21660b2e0bdfd6527b7ed493f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FVG-6.png"},"html":{"href":"https://bitbucket.org/%7B426de9bc-0301-4562-9b8f-d9bd0610ace3%7D/"},"self":{"href":"https://api.bitbucket.org/2.0/users/%7B426de9bc-0301-4562-9b8f-d9bd0610ace3%7D"}},"nickname":"VINICIUS YAN GOIS","type":"user","uuid":"{426de9bc-0301-4562-9b8f-d9bd0610ace3}"}},"date":"2023-10-24T23:27:41+00:00","hash":"4fe534133787e77295365ab78e44e9cc58e61eaf","links":{"approve":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/4fe534133787e77295365ab78e44e9cc58e61eaf/approve"},"comments":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/4fe534133787e77295365ab78e44e9cc58e61eaf/comments"},"diff":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/diff/4fe534133787e77295365ab78e44e9cc58e61eaf"},"html":{"href":"https://bitbucket.org/backend-test1/xtvt-teste/commits/4fe534133787e77295365ab78e44e9cc58e61eaf"},"patch":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/patch/4fe534133787e77295365ab78e44e9cc58e61eaf"},"self":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/4fe534133787e77295365ab78e44e9cc58e61eaf"},"statuses":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/4fe534133787e77295365ab78e44e9cc58e61eaf/statuses"}},"message":"FEATURE/TESTE\n","parents":[{"hash":"bd27af6c5c08d811680f2a422c33b75c1de3d72e","links":{"html":{"href":"https://bitbucket.org/backend-test1/xtvt-teste/commits/bd27af6c5c08d811680f2a422c33b75c1de3d72e"},"self":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/bd27af6c5c08d811680f2a422c33b75c1de3d72e"}},"type":"commit"}],"repository":{"full_name":"backend-test1/xtvt-teste","links":{"avatar":{"href":"https://bytebucket.org/ravatar/%7Babefff62-7c7a-421a-9f8d-83399b4ac991%7D?ts=default"},"html":{"href":"https://bitbucket.org/backend-test1/xtvt-teste"},"self":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste"}},"name":"xtvt-teste","type":"repository","uuid":"{abefff62-7c7a-421a-9f8d-83399b4ac991}"},"type":"commit"},"type":"branch"},{"default_merge_strategy":"merge_commit","links":{"commits":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commits/master"},"html":{"href":"https://bitbucket.org/backend-test1/xtvt-teste/branch/master"},"self":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/refs/branches/master"}},"merge_strategies":["merge_commit","squash","fast_forward"],"name":"master","target":{"author":{"raw":"vinicius <viniciusy@xgrow.com>","type":"author","user":{"account_id":"630f73ccd8850343ef58659e","display_name":"VINICIUS YAN GOIS","links":{"avatar":{"href":"https://secure.gravatar.com/avatar/af0f01d21660b2e0bdfd6527b7ed493f?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FVG-6.png"},"html":{"href":"https://bitbucket.org/%7B426de9bc-0301-4562-9b8f-d9bd0610ace3%7D/"},"self":{"href":"https://api.bitbucket.org/2.0/users/%7B426de9bc-0301-4562-9b8f-d9bd0610ace3%7D"}},"nickname":"VINICIUS YAN GOIS","type":"user","uuid":"{426de9bc-0301-4562-9b8f-d9bd0610ace3}"}},"date":"2023-10-24T21:09:57+00:00","hash":"bd27af6c5c08d811680f2a422c33b75c1de3d72e","links":{"approve":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/bd27af6c5c08d811680f2a422c33b75c1de3d72e/approve"},"comments":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/bd27af6c5c08d811680f2a422c33b75c1de3d72e/comments"},"diff":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/diff/bd27af6c5c08d811680f2a422c33b75c1de3d72e"},"html":{"href":"https://bitbucket.org/backend-test1/xtvt-teste/commits/bd27af6c5c08d811680f2a422c33b75c1de3d72e"},"patch":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/patch/bd27af6c5c08d811680f2a422c33b75c1de3d72e"},"self":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/bd27af6c5c08d811680f2a422c33b75c1de3d72e"},"statuses":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/bd27af6c5c08d811680f2a422c33b75c1de3d72e/statuses"}},"message":"teste\n","parents":[{"hash":"8fce537e8e4a078d15c712c876f809b1d34cf0ff","links":{"html":{"href":"https://bitbucket.org/backend-test1/xtvt-teste/commits/8fce537e8e4a078d15c712c876f809b1d34cf0ff"},"self":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commit/8fce537e8e4a078d15c712c876f809b1d34cf0ff"}},"type":"commit"}],"repository":{"full_name":"backend-test1/xtvt-teste","links":{"avatar":{"href":"https://bytebucket.org/ravatar/%7Babefff62-7c7a-421a-9f8d-83399b4ac991%7D?ts=default"},"html":{"href":"https://bitbucket.org/backend-test1/xtvt-teste"},"self":{"href":"https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste"}},"name":"xtvt-teste","type":"repository","uuid":"{abefff62-7c7a-421a-9f8d-83399b4ac991}"},"type":"commit"},"type":"branch"}]

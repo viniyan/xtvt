@@ -28,3 +28,11 @@ CREATE TABLE IF NOT EXISTS bb_sync_history (
     updated_at VARCHAR(50),
     PRIMARY KEY (tbl, repo)
 );
+
+CREATE TABLE IF NOT EXISTS bb_branches (
+    branch VARCHAR(255) PRIMARY KEY,
+    author VARCHAR(255),
+    repository VARCHAR(255),
+    created_at VARCHAR(50),
+    id VARCHAR(255)
+);

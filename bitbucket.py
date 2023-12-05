@@ -1,5 +1,13 @@
 import re
 import requests
+import json
+from db_utils import (
+    append_branches_bb_branches_table,
+    connect_db,
+    query_sync_history,
+)
+from flask import Flask, jsonify
+
 
 
 class Bitbucket:
@@ -133,7 +141,7 @@ class Bitbucket:
         return email_address
 
     def list_branches(self, page=1, page_size=10):
-        """List pull requests for a given repository."""
+        """List branches for a given repository."""
         print(
             f"Fetching, repo: {self.workspace}/{self.repo}, page: {page}, size: {page_size}..."
         )
@@ -154,4 +162,61 @@ class Bitbucket:
 
         #print(f"Records: {response}")
         return records
+
+    def list_branches_commits(self, page=1, page_size=100):
+        """List commits for a given branch."""
+        print(
+            f"Fetching, repo: {self.workspace}/{self.repo}, page: {page}, size: {page_size}..."
+        )
+
+        # Construct the API url
+        branches_url = f"{self.api_base_url}/{self.workspace}/{self.repo}/refs/branches?page={page}&pagelen={page_size}"
+        auth = (
+            self.username,
+            self.app_password,
+        )
+        response = requests.get(branches_url, auth=auth)
+
+        if response.status_code != 200:
+            return None
+
+        response = response.json()
+        branch_name = response["values"]
+
+        data = json.dumps(branch_name)
+
+        data2 = json.loads(data)
+
+        branch_names = [{"branch": item["name"]} for item in data2]
+        repository_name = [{"repository": item["target"]["repository"]["name"]} for item in data2]
+
+        urls = [f"{self.api_base_url}/{self.workspace}/{self.repo}/commits/{item['branch']}?page={page}&pagelen={page_size}" for item in branch_names]
+
+        # Exibir as URLs resultantes
+        for url in urls:
+            auth = (
+            self.username,
+            self.app_password,
+            )
+            response1 = requests.get(url, auth=auth)
+
+            if response1.status_code != 200:
+                return None
+            
+            response2 = response1.json()
     
+        values = response2['values']
+
+        author_names = [{"authors": item["author"]["user"]["display_name"]} for item in values]
+        commits = [{"commit_id": item["hash"], "created_at": item["date"]} for item in values]
+        branches = [{"branch_name": item["branch"]} for item in branch_names]
+
+        all_data = [branch_names, repository_name, author_names, commits, branches]
+
+
+
+
+
+        return all_data
+        #return branches
+        #return data2

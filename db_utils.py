@@ -11,7 +11,7 @@ logger = logging.getLogger()
 
 
 def connect_db(db_host, db_port, db_user, db_pswd, db_name):
-    db_uri = f"postgresql+psycopg2://{db_user}:{db_pswd}@{db_host}/{db_name}?sslmode=require"
+    db_uri = f"postgresql+psycopg2://{db_user}:{db_pswd}@{db_host}/{db_name}"
     engine = db.create_engine(db_uri, echo=False)
     return engine
 
@@ -469,4 +469,8 @@ def append_branches_bb_commits_table(engine, df, chunk_size):
 
 def append_branches_bb_pullrequests_table(engine, df, chunk_size):
     table_name = "bb_pullrequests"
+    append_records(engine, df, chunk_size, table_name)
+
+def append_branches_bb_branches_table(engine, df, chunk_size):
+    table_name = "bb_branches"
     append_records(engine, df, chunk_size, table_name)
