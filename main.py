@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, render_template
-from collections import Counter
+from collections import Counter, defaultdict
 from bitbucket import Bitbucket
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 import pandas as pd
 from flask_cors import cross_origin
@@ -27,9 +27,8 @@ from db_utils import (
     query_all_pullrequests,
     query_last_author_pullrequest,
     query_last_pullrequest,
-    append_branches_bb_commits_table,
-    append_branches_bb_pullrequests_table,
-    append_branches_bb_branches_table,
+    append_mtr,
+    query_author_mtr,
 )
 import requests
 import concurrent.futures
@@ -577,17 +576,6 @@ def get_last_pullrequest():
 
     formatted_dates = [datetime.fromisoformat(date.replace('T', ' ').replace('Z', '')) for date in all_dates]
 
-    # # Ordenar em ordem decrescente
-    #ordered_dates = sorted(formatted_dates, reverse=True)
-
-    # result = {
-    #     "statusCode": 200,
-    #     "data": {
-    #         "author" : author,
-    #         "last_pr" : ordered_dates[0],
-    #     },
-    # }
-
     dates_by_author = {}
 
     for author in set(all_authors):
@@ -603,148 +591,178 @@ def get_last_pullrequest():
     }
 
     return result
-    # return ordered_dates
+      
 
-
-@app.route("/sync_branches", methods=["POST"])
+@app.route("/sync_mtr", methods=["POST"])
 @cross_origin()
-def list_branches():
-    # Retrieve query parameters
-    page_size = request.args.get("page_size", default=10, type=int)
+def sync_mtr(page=1, page_size=100):
 
-    # Retrieve repositories
     repos = app.config["BITBUCKET_REPOS"]
 
+    engine = init_db_engine()
+
+    # total_count = 0
+
+    for repo in repos:
+        workspace, repo_slug = repo.split("/")
+        
+
+    # Initialize Bitbucket client
+    bitbucket = Bitbucket(
+        app.config["BITBUCKET_USERNAME"],
+        app.config["BITBUCKET_APP_PASSWORD"],
+        workspace,
+        repo_slug,
+    )
+
+    result = bitbucket.sync_mtr(page=page, page_size=page_size)
+
+    df = pd.DataFrame(result)
+
+    append_mtr(engine, df, app.config["DB_CHUNK_SIZE"])
+
+    return result
+
+@app.route("/<author>/mtr", methods=["GET"])
+@cross_origin()
+def get_author_mtr(author):
     # Connect to database
     engine = init_db_engine()
 
-    total_count = 0
+    # Get the diffs from the database
+    df = query_author_mtr(engine, author)
 
-    for repo in repos:
-        workspace, repo_slug = repo.split("/")
-
-        # Initialize Bitbucket client
-        bitbucket = Bitbucket(
-            app.config["BITBUCKET_USERNAME"],
-            app.config["BITBUCKET_APP_PASSWORD"],
-            workspace,
-            repo_slug,
-        )
-
-        records = bitbucket.list_branches()
-
-        count = 0
-        
-        # Carregar o JSON
-        data = json.dumps(records)
-
-        data2 = json.loads(data)
-
-        data_for_table = [{"branch": item["name"], "author": item["target"]["author"]["user"]["display_name"], "created_at": item["target"]["date"], "repository": item["target"]["repository"]["full_name"]} for item in data2]
-
-        
-        df = pd.DataFrame(data_for_table)
-
-        #print(df)
-
-        #append_branches_bb_branches_table(engine, df, app.config["DB_CHUNK_SIZE"])
-
-        count += len(data_for_table)
-    
-    total_count += count
+    commit_messages_by_author = df.groupby('author')[['commit_message', 'created_at']].agg(list).to_dict()
 
     result = {
-        "statusCode": 200,
-        "count": total_count,
+        "author": author,
+        "tasks": {}
     }
-    #return jsonify(result)
-    return data2
-    #return data_for_table       
 
-@app.route("/sync_branches2", methods=["POST"])
-@cross_origin()
-def sync_branches_commits(page=1, page_size=100):
-
-    repos = app.config["BITBUCKET_REPOS"]
-
-    engine = init_db_engine()
-
-    total_count = 0
-
-    for repo in repos:
-        workspace, repo_slug = repo.split("/")
-
-        # Get the sync history for the repo
-        table_name = "bb_branches"
-        df_s = query_sync_history(engine, table_name, repo)
-        last_synced_at = None
-        if len(df_s) > 0:
-            updated_at = df_s.iloc[0]["updated_at"]
-            last_synced_at = datetime.fromisoformat(updated_at)
-            print(f"Last synced at: {last_synced_at}")
-
-        # Initialize Bitbucket client
-        bitbucket = Bitbucket(
-            app.config["BITBUCKET_USERNAME"],
-            app.config["BITBUCKET_APP_PASSWORD"],
-            workspace,
-            repo_slug,
-        )
-
-        page = 1
-        count = 0
-
-        result = bitbucket.list_branches_commits(page=page, page_size=page_size)
-        return result
+    commit_messages = commit_messages_by_author['commit_message']
+    commit_dates = commit_messages_by_author['created_at']
 
 
-    # while True:
-    #     # Return a list of branches
-        
-    #     records1 = bitbucket.list_branches_commits(page=page, page_size=page_size)
+    result = {
+        "author": author,
+        "tasks": []
+    }
 
-    #     if len(records1) == 0:
-    #         break
 
-    #     df = pd.DataFrame(records1)
+    for author, messages in commit_messages.items():
+        mean_time_to_repair = commit_dates.get(author, [])
+        task_map = defaultdict(list)
 
-    #     append_branches_bb_branches_table(engine, df, app.config["DB_CHUNK_SIZE"])
+        for message, date in zip(messages, mean_time_to_repair):
+            
+            task_name_index = message.find('/') 
+            task_name = message[:task_name_index] if task_name_index != -1 else message
 
-    #     page += 1
-    #     count += len(records1)
+            task_map[task_name].append({
+                "dates": date,
+                "task": message
+            })
+            ############################
+            # task_map[message].append({
+            #     "dates": date,
+            #     "task": message
+            # })
 
-    #     look_more = True
-    #     for index, row in df.iterrows():
-    #         created_at = datetime.fromisoformat(row["created_at"])
-    #         if last_synced_at is not None and created_at < last_synced_at:
-    #             print(
-    #                 f"Reached last synced record: {created_at} | {last_synced_at}"
-    #             )
-    #             look_more = False
-    #             break
+        task_entries = []
 
-    #         if not look_more:
-    #             break
+        # for task_name, entries in task_map.items():
+        #     task_entry = {
+        #         "mean_time_to_repair": [
+        #             {"dates": entry["dates"], "task": entry["task"]} for entry in entries
+        #         ]
+        #     }
+        #     task_entries.append(task_entry)
 
-    #     # Update the sync history for the repo
-    #     insert_sync_history(engine, table_name, repo)
+        error_qty = []
+        ##########################################
+        for entries in task_map.values():
+            #print(task_map.values())
+            entries.sort(key=lambda x: x["dates"], reverse=True)
 
-    #     total_count += count
 
-    # result = {
-    #     "statusCode": 200,
-    #     "count": total_count,
-    # }
-    # #return jsonify(result)
-        
-    # return records1
+            task_value = entries[0]["task"]
+            #print(entries)
+            task_name_index = task_value.find('/')  # Obter a parte antes do '/'
+            if task_name_index == -1:
+                error_qty.append(task_value)
+            else:
+                task_name = task_value[:task_name_index]
+                task_entry = {"mean_time_to_repair": [{"task": task_name, "dates": entry["dates"]} for entry in entries]}
+                task_entries.append(task_entry)
+                #print(task_name)
+        ###############################################       
 
-        
-    # return data2
+        task = {
+            "author": author,
+            "wrong_commit_message_qty": len(error_qty),
+            "tasks": task_entries,
+        }
+
+        result["tasks"].append(task)
+
+    
 
 
 
+    for author_entry in result["tasks"]:
+        for task_entry in author_entry["tasks"]:
+            mean_time_to_repair = task_entry["mean_time_to_repair"]
 
+            if len(mean_time_to_repair) > 1:
+                dates = [datetime.fromisoformat(entry['dates']) for entry in mean_time_to_repair]
+
+                # Calcula a diferença total de tempo em segundos
+                total_time_diff = sum((dates[j - 1] - dates[j]).total_seconds() for j in range(1, len(dates)))
+
+                # Converte a diferença total para horas
+                total_hours = total_time_diff / 3600
+
+                mean_time_to_repair[0]["total_difference"] = total_hours
+
+
+    mtr_times = []
+    
+
+
+    def parse_mtr_time(time_str):
+        try:
+            # Tenta analisar no formato atual
+            return datetime.strptime(time_str, "%H:%M:%S.%f") - datetime(1900, 1, 1)
+        except ValueError:
+            # Se falhar, tenta analisar no formato alternativo
+            days, time_part = time_str.split(", ")
+            time_obj = datetime.strptime(time_part, "%H:%M:%S")
+            return timedelta(days=int(days.split()[0]), hours=time_obj.hour, minutes=time_obj.minute, seconds=time_obj.second)
+
+    def format_timedelta(td):
+        seconds = td.total_seconds()
+        hours, remainder = divmod(seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
+
+    for author_entry in result["tasks"]:
+        for task_entry in author_entry["tasks"]:
+            #print(task_entry["mean_time_to_repair"])
+            for i in (task_entry["mean_time_to_repair"]):
+                if len(i) > 2:
+                    mtr_times.append(i['total_difference'])
+                    print(i['total_difference'])
+
+
+    if mtr_times:
+        average_time_diff = sum(mtr_times) / len(mtr_times)
+        #result['mtr_all'] = format_timedelta(timedelta(seconds=average_time_diff))
+        result['mtr_all'] = str(timedelta(hours=average_time_diff))
+    else:
+        result['mtr_all'] = "No MTR Times found."
+
+
+    return result
 
 
 if __name__ == "__main__":

@@ -5,20 +5,9 @@
             "server": "localhost",
             "port": 5432,
             "driver": "PostgreSQL",
-            "name": "xtvt",
-            "group": "xtvt",
-            "database": "xtvt_test9",
-            "username": "postgres",
-            "password": "Haikaiss16"
-        },
-        {
-            "previewLimit": 50,
-            "server": "localhost",
-            "port": 5432,
-            "driver": "PostgreSQL",
             "name": "XTVT",
-            "group": "xtvt",
-            "database": "xtvt_test11",
+            "group": "XTVT",
+            "database": "xtvt_test16",
             "username": "postgres",
             "password": "Haikaiss16"
         }

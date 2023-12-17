@@ -2,12 +2,12 @@ import re
 import requests
 import json
 from db_utils import (
-    append_branches_bb_branches_table,
+    append_mtr,
     connect_db,
     query_sync_history,
 )
 from flask import Flask, jsonify
-
+from urllib.parse import urlparse, parse_qs
 
 
 class Bitbucket:
@@ -163,7 +163,7 @@ class Bitbucket:
         #print(f"Records: {response}")
         return records
 
-    def list_branches_commits(self, page=1, page_size=100):
+    def sync_mtr(self, page=1, page_size=1000):
         """List commits for a given branch."""
         print(
             f"Fetching, repo: {self.workspace}/{self.repo}, page: {page}, size: {page_size}..."
@@ -191,8 +191,22 @@ class Bitbucket:
         repository_name = [{"repository": item["target"]["repository"]["name"]} for item in data2]
 
         urls = [f"{self.api_base_url}/{self.workspace}/{self.repo}/commits/{item['branch']}?page={page}&pagelen={page_size}" for item in branch_names]
+        #print(urls)
+        #['https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commits/feature/teste?page=1&pagelen=100', 
+        #'https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commits/master?page=1&pagelen=100', 
+        #'https://api.bitbucket.org/2.0/repositories/backend-test1/xtvt-teste/commits/feature/teste2?page=1&pagelen=100']
+        
+        ### O ENDPOINT ABAIXO NÃO RETORNA TODOS OS AUTORES!!!
+        #urls = [f"{self.api_base_url}/{self.workspace}/{self.repo}/refs?q=name=%22{item['branch']}%22" for item in branch_names]
 
-        # Exibir as URLs resultantes
+                
+        
+        result = []
+        result_branches = []
+
+
+
+        #Exibir as URLs resultantes
         for url in urls:
             auth = (
             self.username,
@@ -201,22 +215,64 @@ class Bitbucket:
             response1 = requests.get(url, auth=auth)
 
             if response1.status_code != 200:
+                print("ERRO")
                 return None
-            
-            response2 = response1.json()
+            else:
+                content = response1.json()
+                result.append(content)
+                # parts = url.split("/commits/")
+                # branch_name = parts[1]
+                # special = branch_name.split("?", 1)
+                # branch_final = special[0]
+                # result_branches.append(branch_final)
     
-        values = response2['values']
 
-        author_names = [{"authors": item["author"]["user"]["display_name"]} for item in values]
-        commits = [{"commit_id": item["hash"], "created_at": item["date"]} for item in values]
-        branches = [{"branch_name": item["branch"]} for item in branch_names]
+        result_dict = result
+        result_dict_2 = result
+            
+        #print(result_dict_2)
 
-        all_data = [branch_names, repository_name, author_names, commits, branches]
+        author_name_list = []
+        commit_date_list = []
+        commit_id_list = []
+        message_list = []
+        repository_list = []
+
+        # Conjunto para manter registro dos commit_ids
+        seen_commit_ids = set()
+
+        for i in result_dict:    
+            values_list = [i['values'] for i in result_dict]
+            #print(i['values'])
+            #print(values_list)
+            for d in values_list:
+                for author_data in d:
+                    commit_id = author_data["hash"]
+                    if commit_id not in seen_commit_ids:
+                        author_name = author_data["author"]["user"]["display_name"]
+                        commit_date = author_data["date"]
+                        commit_id = author_data["hash"]
+                        message = author_data["message"]
+                        repository = author_data["repository"]["name"]
+                        author_name_list.append(author_name)
+                        commit_date_list.append(commit_date)
+                        commit_id_list.append(commit_id)
+                        message_list.append(message)
+                        repository_list.append(repository)
+
+                        seen_commit_ids.add(commit_id)
 
 
 
+        result_all = {
+        "commit_message": message_list,
+        "author": author_name_list,
+        "repository": repository_list,
+        "created_at": commit_date_list,
+        "commit_id": commit_id_list
 
+        }
 
-        return all_data
+        return result_all
         #return branches
         #return data2
