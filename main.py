@@ -757,7 +757,13 @@ def get_author_mtr(author):
     if mtr_times:
         average_time_diff = sum(mtr_times) / len(mtr_times)
         #result['mtr_all'] = format_timedelta(timedelta(seconds=average_time_diff))
-        result['mtr_all'] = str(timedelta(hours=average_time_diff))
+        formatted = str(timedelta(hours=average_time_diff))
+        if len(formatted) == 22:
+            formatted_result = formatted[:-7]
+            result['mtr_all'] = formatted_result
+        if len(formatted) == 23:
+            formatted_result = formatted[:-8]
+            result['mtr_all'] = formatted_result
     else:
         result['mtr_all'] = "No MTR Times found."
 
