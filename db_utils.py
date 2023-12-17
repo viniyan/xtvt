@@ -462,11 +462,42 @@ def query_last_pullrequest(engine):
 
     return df
 
+def append_mtr_records(engine, df, chunk_size, table_name):
+    df.set_index('commit_id', inplace=True)
+    if 'id' not in df.columns:
+        # Se não estiver presente, você pode adicionar uma coluna 'id' com valores únicos
+        df['id'] = range(1, len(df) + 1)
 
-def append_branches_bb_commits_table(engine, df, chunk_size):
-    table_name = "bb_commits"
-    append_records(engine, df, chunk_size, table_name)
+    df.to_sql(
+        con=engine,
+        name=table_name,
+        if_exists="replace",
+        index=True,
+        index_label='commit_id',
+        chunksize=chunk_size,
+    )
 
-def append_branches_bb_pullrequests_table(engine, df, chunk_size):
-    table_name = "bb_pullrequests"
-    append_records(engine, df, chunk_size, table_name)
+def append_mtr(engine, df, chunk_size):
+    table_name = "bb_mtr"
+    append_mtr_records(engine, df, chunk_size, table_name)
+
+
+def query_author_mtr(engine, author):
+    sql = """
+        SELECT * 
+        FROM bb_mtr
+        WHERE (author = :author);
+    """
+
+    stmt = text(sql)
+    stmt = stmt.bindparams(author=author)
+    with engine.begin() as conn:
+        result = conn.execute(stmt)
+
+    records = []
+    for record in result:
+        records.append(record)
+
+    df = pd.DataFrame(records)
+
+    return df
