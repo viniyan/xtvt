@@ -11,7 +11,7 @@ logger = logging.getLogger()
 
 
 def connect_db(db_host, db_port, db_user, db_pswd, db_name):
-    db_uri = f"postgresql+psycopg2://{db_user}:{db_pswd}@{db_host}/{db_name}?sslmode=require"
+    db_uri = f"postgresql+psycopg2://{db_user}:{db_pswd}@{db_host}/{db_name}"
     engine = db.create_engine(db_uri, echo=False)
     return engine
 
