@@ -9,6 +9,7 @@ from db_utils import (
 from flask import Flask, jsonify
 from urllib.parse import urlparse, parse_qs
 import os
+import pandas as pd
 
 
 
@@ -252,59 +253,162 @@ class Bitbucket:
                 message_list = []
                 repository_list = []
 
+
                 # Conjunto para manter registro dos commit_ids
                 seen_commit_ids = set()
 
                 for i in result_dict:    
                     values_list = [i['values'] for i in result_dict]
+                    author_file_path = 'author_names.txt'
+                    commit_date_file_path = 'commit_dates.txt'
+                    commit_id_file_path = 'commit_ids.txt'
+                    message_file_path = 'messages.txt'
+                    repository_file_path = 'repository.txt'
                     #print(i['values'])
                     #print(values_list)
                     for d in values_list:
                         # print(d)
+                        # caminho_arquivo = 'author_data.txt'
+
+                        # Abre o arquivo no modo de escrita
+                        # with open(caminho_arquivo, 'w') as arquivo_txt:
+                        #     # Itera sobre cada author_data em d
                         for author_data in d:
+                            # Escreve a author_data no arquivo, seguido por uma nova linha
+                            # arquivo_txt.write(f"{author_data}\n")
                             commit_id = author_data["hash"]
                             if "author" in author_data and "user" in author_data["author"]:
-                                #print(author_data["author"]["user"]["display_name"])
                                 if commit_id not in seen_commit_ids:
                                     author_name = author_data["author"]["user"]["display_name"]
                                     commit_date = author_data["date"]
                                     commit_id = author_data["hash"]
-                                    message = author_data["message"]
+                                    message = author_data["message"].strip()
                                     repository = author_data["repository"]["name"]
-                                    author_name_list.append(author_name)
-                                    commit_date_list.append(commit_date)
-                                    commit_id_list.append(commit_id)
-                                    message_list.append(message)
-                                    repository_list.append(repository)
+                                    if message:
+                                        message = message.replace('\n', '')
+                                        message_list.append(message)
+                                        author_name_list.append(author_name)
+                                        commit_date_list.append(commit_date)
+                                        commit_id_list.append(commit_id)
+                                        repository_list.append(repository)
+                                        with open(message_file_path, 'a', encoding='utf-8') as file:
+                                            file.write(message + '\n')
+                                        with open(author_file_path, 'a') as file:
+                                            file.write(author_name + '\n')
+
+                                        with open(commit_date_file_path, 'a') as file:
+                                            file.write(commit_date + '\n')
+
+                                        with open(commit_id_file_path, 'a') as file:
+                                            file.write(commit_id + '\n')
+
+                                        with open(repository_file_path, 'a') as file:
+                                            file.write(repository + '\n')
+                                    else:
+                                        print("Empty message encountered.")       
 
                                     seen_commit_ids.add(commit_id)
+                                    
+
                             else:
-                                # print(f"Missing 'user' key in author_data['author']: {author_data}")
                                 if commit_id not in seen_commit_ids:
                                     author_name = author_data["author"]["raw"]
                                     commit_date = author_data["date"]
                                     commit_id = author_data["hash"]
-                                    message = author_data["message"]
+                                    message = author_data["message"].strip()
                                     repository = author_data["repository"]["name"]
-                                    author_name_list.append(author_name)
-                                    commit_date_list.append(commit_date)
-                                    commit_id_list.append(commit_id)
-                                    message_list.append(message)
-                                    repository_list.append(repository)
+                                    if message:
+                                        message = message.replace('\n', '')
+                                        message_list.append(message)
+                                        author_name_list.append(author_name)
+                                        commit_date_list.append(commit_date)
+                                        commit_id_list.append(commit_id)
+                                        repository_list.append(repository)
+                                        with open(message_file_path, 'a', encoding='utf-8') as file:
+                                            file.write(message + '\n')
+
+                                        with open(author_file_path, 'a') as file:
+                                            file.write(author_name + '\n')
+
+                                        with open(commit_date_file_path, 'a') as file:
+                                            file.write(commit_date + '\n')
+
+                                        with open(commit_id_file_path, 'a') as file:
+                                            file.write(commit_id + '\n')
+
+                                        with open(repository_file_path, 'a') as file:
+                                            file.write(repository + '\n')
+                    
+                                    else:
+                                        print("Empty message encountered.")        
 
                                     seen_commit_ids.add(commit_id)
-                            
+                                        
+                        
+                # Carregar dados dos arquivos TXT para listas
+                with open(author_file_path, 'r') as file:
+                    author_name_list = file.read().splitlines()   
+                    # author_name_list = list(enumerate(file.read().splitlines(), start=1))
+
+                with open(commit_date_file_path, 'r') as file:
+                    commit_date_list = file.read().splitlines()
+                    # commit_date_list = list(enumerate(file.read().splitlines(), start=1))
+
+                with open(commit_id_file_path, 'r') as file:
+                    commit_id_list = file.read().splitlines()
+                    
+            ####PARA ADICIONAR ÍNDICE NOS ARQUIVOS TXT, SE NECESSÁRIO
+            # # # # # # processed_lines = []
+
+            # # # # # # with open(message_file_path, 'r') as file:
+            # # # # # #     for line in file:
+            # # # # # #         processed_lines.append([line.strip()])
+
+            # # # # # # df = pd.DataFrame(processed_lines, columns=['Coluna'])
+            # # # # # # df.to_csv(message_file_path, index=True)
+            # # # # # #     #print(df)
+                with open(message_file_path, 'r') as file:
+                    message_list = file.read().splitlines()
+                    #message_list = list(enumerate(file.read().splitlines(), start=1))
+
+                with open(repository_file_path, 'r') as file:
+                    repository_list = file.read().splitlines()
+                    # repository_list = list(enumerate(file.read().splitlines(), start=1))
+
+                                
+            print(len(author_name_list))
+            print(len(commit_date_list))
+            print(len(commit_id_list))
+            print(len(message_list))
+            print(len(repository_list))
 
 
-                result_all = {
-                "commit_message": message_list,
-                "author": author_name_list,
-                "repository": repository_list,
-                "created_at": commit_date_list,
-                "commit_id": commit_id_list
+        result_all = {
+        "commit_message": message_list,
+        "author": author_name_list,
+        "repository": repository_list,
+        "created_at": commit_date_list,
+        "commit_id": commit_id_list
 
-                }
+        }
+        
+
+
+        # Limpar o conteúdo de cada arquivo
+        with open(author_file_path, 'w') as file:
+            file.truncate(0)
+        with open(commit_date_file_path, 'w') as file:
+            file.truncate(0)
+            
+        with open(commit_id_file_path, 'w') as file:
+            file.truncate(0)
+            
+        with open(message_file_path, 'w') as file:
+            file.truncate(0)
+
+        with open(repository_file_path, 'w') as file:
+            file.truncate(0)
+                
+                
 
         return result_all
-        #return branches
-        #return data2
