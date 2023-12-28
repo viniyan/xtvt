@@ -140,15 +140,15 @@ def query_author_commits(engine, author_id):
     return df
 
 
-def query_author_pullrequests(engine, author_id):
+def query_author_pullrequests(engine, author):
     sql = """
         SELECT * 
         FROM bb_pullrequests
-        WHERE author_id = :author_id;
+        WHERE author = :author;
     """
 
     stmt = text(sql)
-    stmt = stmt.bindparams(author_id=author_id)
+    stmt = stmt.bindparams(author=author)
     with engine.begin() as conn:
         result = conn.execute(stmt)
 
