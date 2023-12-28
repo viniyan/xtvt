@@ -127,14 +127,14 @@ def get_author_commits(author_id):
     return jsonify(result)
 
 
-@app.route("/authors/<author_id>/pullrequests", methods=["GET"])
+@app.route("/authors/<author>/pullrequests", methods=["GET"])
 @cross_origin()
-def get_author_pullrequests(author_id):
+def get_author_pullrequests(author):
     # Connect to database
     engine = init_db_engine()
 
     # Return a list of commits
-    df = query_author_pullrequests(engine, author_id)
+    df = query_author_pullrequests(engine, author)
 
     result = {
         "statusCode": 200,
